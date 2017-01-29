@@ -10,7 +10,7 @@ import io.undertow.Undertow;
 import io.undertow.UndertowOptions;
 import io.undertow.util.Headers;
 
-public final class TurtleServer {
+public class TurtleServer {
 
 	public static void main(String[] args)
 	{
