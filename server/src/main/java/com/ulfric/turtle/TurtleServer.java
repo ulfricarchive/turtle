@@ -1,7 +1,5 @@
 package com.ulfric.turtle;
 
-import java.security.NoSuchAlgorithmException;
-
 import javax.net.ssl.SSLContext;
 
 import com.ulfric.commons.exception.Try;
@@ -11,7 +9,7 @@ import io.undertow.util.Headers;
 
 public final class TurtleServer {
 
-	public static void main(String[] args) throws NoSuchAlgorithmException
+	public static void main(String[] args)
 	{
 		TurtleServer server = new TurtleServer();
 		server.start();
