@@ -5,6 +5,7 @@ import javax.net.ssl.SSLContext;
 import com.ulfric.commons.exception.Try;
 
 import io.undertow.Undertow;
+import io.undertow.UndertowOptions;
 import io.undertow.util.Headers;
 
 public final class TurtleServer {
@@ -25,6 +26,7 @@ public final class TurtleServer {
 	private Undertow build()
 	{
 		return Undertow.builder()
+				.setServerOption(UndertowOptions.ENABLE_HTTP2, true)
 				.addHttpsListener(8080, "localhost", Try.to(SSLContext::getDefault))
 				.setHandler(exchange ->
 				{
