@@ -4,12 +4,14 @@ import javax.net.ssl.SSLContext;
 
 import com.ulfric.commons.cdi.ObjectFactory;
 import com.ulfric.commons.cdi.inject.Inject;
+import com.ulfric.commons.cdi.scope.Shared;
 import com.ulfric.commons.exception.Try;
 
 import io.undertow.Undertow;
 import io.undertow.UndertowOptions;
 import io.undertow.util.Headers;
 
+@Shared
 public class TurtleServer {
 
 	public static void main(String[] args)
@@ -45,6 +47,11 @@ public class TurtleServer {
 	private void start()
 	{
 		this.undertow.start();
+	}
+
+	public void stop()
+	{
+		this.undertow.stop();
 	}
 
 }
