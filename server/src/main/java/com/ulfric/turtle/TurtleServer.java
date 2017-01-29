@@ -19,20 +19,24 @@ public final class TurtleServer {
 
 	private final Undertow undertow;
 
-	private TurtleServer() {
+	private TurtleServer()
+	{
 		this.undertow = this.build();
 	}
 
-	private Undertow build() {
+	private Undertow build()
+	{
 		return Undertow.builder()
 				.addHttpsListener(8080, "localhost", Try.to(SSLContext::getDefault))
-				.setHandler(exchange -> {
+				.setHandler(exchange ->
+				{
 					exchange.getResponseHeaders().put(Headers.CONTENT_TYPE, "text/plain");
 				})
 				.build();
 	}
 
-	private void start() {
+	private void start()
+	{
 		this.undertow.start();
 	}
 
