@@ -1,6 +1,8 @@
 package com.ulfric.turtle;
 
-public abstract class TurtleService {
+import com.ulfric.commons.cdi.container.Container;
+
+public abstract class TurtleService extends Container {
 
 
 

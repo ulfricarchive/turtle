@@ -1,8 +1,14 @@
 package com.ulfric.turtle;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import javax.net.ssl.SSLContext;
 
+import org.apache.commons.collections4.map.CaseInsensitiveMap;
+
 import com.ulfric.commons.cdi.ObjectFactory;
+import com.ulfric.commons.cdi.container.Container;
 import com.ulfric.commons.cdi.inject.Inject;
 import com.ulfric.commons.cdi.scope.Shared;
 import com.ulfric.commons.exception.Try;
@@ -18,9 +24,11 @@ public class TurtleServer {
 	{
 		ObjectFactory factory = ObjectFactory.newInstance();
 		TurtleServer server = factory.requestExact(TurtleServer.class);
+		server.load();
 		server.start();
 	}
 
+	private final Map<HttpMethod, Map<String, ExchangeController>> allControllers = new HashMap<>();
 	private final Undertow undertow;
 
 	@Inject
@@ -39,10 +47,30 @@ public class TurtleServer {
 				.setHandler(exchange ->
 				{
 					exchange.getResponseHeaders().put(Headers.CONTENT_TYPE, "text/plain");
+
+					Map<String, ExchangeController> pathControllers = this.allControllers.get(HttpMethod.valueOf(exchange.getRequestMethod().toString()));
+
+					ExchangeController controller = pathControllers.get(exchange.getRequestPath());
+					if (controller != null)
+					{
+						Response response = (Response) controller.getFunction().apply(new Request());
+
+						// do something with response
+					}
+
 				})
 				.build();
 	}
 
+	private void load()
+	{
+		for (HttpMethod httpMethod : HttpMethod.values())
+		{
+			this.allControllers.put(httpMethod, new CaseInsensitiveMap<>());
+		}
+
+		Container.registerComponentWrapper(Object.class, this.factory.requestExact(ExchangeComponentWrapper.class));
+	}
 
 	private void start()
 	{
@@ -52,6 +80,13 @@ public class TurtleServer {
 	public void stop()
 	{
 		this.undertow.stop();
+	}
+
+	public void registerExchange(ExchangeController exchangeController)
+	{
+		this.allControllers
+				.get(exchangeController.getTarget().getMethod())
+				.put(exchangeController.getTarget().getPath(), exchangeController);
 	}
 
 }

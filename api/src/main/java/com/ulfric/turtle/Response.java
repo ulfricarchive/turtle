@@ -1,5 +1,5 @@
 package com.ulfric.turtle;
 
-public class Response {
+public class Response extends Message {
 
 }
