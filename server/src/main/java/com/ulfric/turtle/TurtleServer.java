@@ -2,6 +2,8 @@ package com.ulfric.turtle;
 
 import javax.net.ssl.SSLContext;
 
+import com.ulfric.commons.cdi.ObjectFactory;
+import com.ulfric.commons.cdi.inject.Inject;
 import com.ulfric.commons.exception.Try;
 
 import io.undertow.Undertow;
@@ -12,11 +14,15 @@ public final class TurtleServer {
 
 	public static void main(String[] args)
 	{
-		TurtleServer server = new TurtleServer();
+		ObjectFactory factory = ObjectFactory.newInstance();
+		TurtleServer server = factory.requestExact(TurtleServer.class);
 		server.start();
 	}
 
 	private final Undertow undertow;
+
+	@Inject
+	private ObjectFactory factory;
 
 	private TurtleServer()
 	{
@@ -34,6 +40,7 @@ public final class TurtleServer {
 				})
 				.build();
 	}
+
 
 	private void start()
 	{
