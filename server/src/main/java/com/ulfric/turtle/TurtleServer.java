@@ -9,6 +9,7 @@ import com.ulfric.commons.exception.Try;
 
 import io.undertow.Undertow;
 import io.undertow.UndertowOptions;
+import io.undertow.server.HttpHandler;
 import io.undertow.util.Headers;
 
 @Shared
@@ -28,19 +29,36 @@ public class TurtleServer {
 
 	private TurtleServer()
 	{
-		this.undertow = this.build();
+		this.undertow = this.buildUndertowInstance();
 	}
 
-	private Undertow build()
+	private Undertow buildUndertowInstance()
 	{
 		return Undertow.builder()
 				.setServerOption(UndertowOptions.ENABLE_HTTP2, true)
-				.addHttpsListener(8080, "localhost", Try.to(SSLContext::getDefault))
-				.setHandler(exchange ->
-				{
-					exchange.getResponseHeaders().put(Headers.CONTENT_TYPE, "text/plain");
-				})
+				.addHttpsListener(this.getPort(), this.getHost(), this.getSslContext())
+				.setHandler(this.createHttpHandler())
 				.build();
+	}
+
+	private int getPort()
+	{
+		return 8080;
+	}
+
+	private String getHost()
+	{
+		return "localhost";
+	}
+
+	private SSLContext getSslContext()
+	{
+		return Try.to(SSLContext::getDefault);
+	}
+
+	private HttpHandler createHttpHandler()
+	{
+		return exchange -> exchange.getResponseHeaders().put(Headers.CONTENT_TYPE, "text/plain");
 	}
 
 	public void start()
