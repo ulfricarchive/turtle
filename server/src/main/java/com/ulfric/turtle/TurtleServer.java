@@ -43,8 +43,7 @@ public class TurtleServer {
 				.build();
 	}
 
-
-	private void start()
+	public void start()
 	{
 		this.undertow.start();
 	}
