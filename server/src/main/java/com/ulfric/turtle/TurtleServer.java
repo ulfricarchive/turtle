@@ -15,13 +15,6 @@ import io.undertow.util.Headers;
 @Shared
 public class TurtleServer {
 
-	public static void main(String[] args)
-	{
-		ObjectFactory factory = ObjectFactory.newInstance();
-		TurtleServer server = factory.requestExact(TurtleServer.class);
-		server.start();
-	}
-
 	private final Undertow undertow;
 
 	@Inject
