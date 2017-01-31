@@ -7,6 +7,7 @@ import org.junit.platform.runner.JUnitPlatform;
 import org.junit.runner.RunWith;
 
 import com.ulfric.commons.cdi.ObjectFactory;
+import com.ulfric.verify.Verify;
 
 @RunWith(JUnitPlatform.class)
 public class TurtleServerTest {
@@ -24,13 +25,26 @@ public class TurtleServerTest {
 	@AfterEach
 	void teardown()
 	{
-		this.server.stop();
+		if (this.server.isRunning())
+		{
+			this.server.stop();
+		}
 	}
 
 	@Test
 	void testStart()
 	{
 		this.server.start();
+	}
+
+	@Test
+	void testIsRunning()
+	{
+		Verify.that(this.server.isRunning()).isFalse();
+		this.server.start();
+		Verify.that(this.server.isRunning()).isTrue();
+		this.server.stop();
+		Verify.that(this.server.isRunning()).isFalse();
 	}
 
 }

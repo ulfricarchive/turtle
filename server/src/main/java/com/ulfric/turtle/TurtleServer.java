@@ -21,6 +21,8 @@ public class TurtleServer {
 	@Inject
 	private ObjectFactory factory;
 
+	private volatile boolean running = false;
+
 	private TurtleServer()
 	{
 		this.configuration = TurtleConfiguration.loadConfiguration();
@@ -50,11 +52,18 @@ public class TurtleServer {
 	public void start()
 	{
 		this.undertow.start();
+		this.running = true;
+	}
+
+	public boolean isRunning()
+	{
+		return this.running;
 	}
 
 	public void stop()
 	{
 		this.undertow.stop();
+		this.running = false;
 	}
 
 }
