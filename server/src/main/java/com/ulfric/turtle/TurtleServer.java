@@ -16,32 +16,25 @@ import io.undertow.util.Headers;
 public class TurtleServer {
 
 	private final Undertow undertow;
+	private final TurtleConfiguration configuration;
 
 	@Inject
 	private ObjectFactory factory;
 
 	private TurtleServer()
 	{
+		this.configuration = TurtleConfiguration.loadConfiguration();
 		this.undertow = this.buildUndertowInstance();
 	}
 
 	private Undertow buildUndertowInstance()
 	{
+		TurtleConfiguration configuration = this.configuration;
 		return Undertow.builder()
-				.setServerOption(UndertowOptions.ENABLE_HTTP2, true)
-				.addHttpsListener(this.getPort(), this.getHost(), this.getSslContext())
+				.setServerOption(UndertowOptions.ENABLE_HTTP2, configuration.getHttp2())
+				.addHttpsListener(configuration.getPort(), configuration.getHost(), this.getSslContext())
 				.setHandler(this.createHttpHandler())
 				.build();
-	}
-
-	private int getPort()
-	{
-		return 8080;
-	}
-
-	private String getHost()
-	{
-		return "localhost";
 	}
 
 	private SSLContext getSslContext()

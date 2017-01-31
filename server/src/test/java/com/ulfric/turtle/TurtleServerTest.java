@@ -19,7 +19,6 @@ public class TurtleServerTest {
 	{
 		this.factory = ObjectFactory.newInstance();
 		this.server = this.factory.requestExact(TurtleServer.class);
-		
 	}
 
 	@AfterEach
