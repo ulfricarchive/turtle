@@ -1,5 +1,6 @@
 package com.ulfric.turtle;
 
+import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -8,6 +9,7 @@ import javax.net.ssl.SSLContext;
 import org.apache.commons.collections4.map.CaseInsensitiveMap;
 
 import com.ulfric.commons.cdi.ObjectFactory;
+import com.ulfric.commons.cdi.construct.InstanceUtils;
 import com.ulfric.commons.cdi.container.Container;
 import com.ulfric.commons.cdi.inject.Inject;
 import com.ulfric.commons.cdi.scope.Shared;
@@ -53,9 +55,30 @@ public class TurtleServer {
 					ExchangeController controller = pathControllers.get(exchange.getRequestPath());
 					if (controller != null)
 					{
-						Response response = (Response) controller.getFunction().apply(new Request());
+						Request request = InstanceUtils.createOrNull(controller.getHttpPackage().getRequest());
 
-						// do something with response
+						if (request == null)
+						{
+							exchange.setStatusCode(500);
+
+							return;
+						}
+
+						Method method = controller.getHttpPackage().getMethod();
+
+						Object instance = this.factory.request(method.getDeclaringClass());
+
+						Object responseObject =
+								method.getParameterCount() == 1 ?
+										method.invoke(instance, request) :
+										method.invoke(instance);
+
+						Response response =
+								responseObject instanceof Response ?
+										(Response) responseObject :
+										new Response();
+
+						// We have a response!
 					}
 
 				})

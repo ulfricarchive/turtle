@@ -2,6 +2,7 @@ package com.ulfric.turtle;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
+import java.lang.reflect.Parameter;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
@@ -12,7 +13,6 @@ import com.ulfric.commons.cdi.ObjectFactory;
 import com.ulfric.commons.cdi.container.Component;
 import com.ulfric.commons.cdi.container.ComponentWrapper;
 import com.ulfric.commons.cdi.inject.Inject;
-import com.ulfric.commons.exception.Try;
 
 class ExchangeComponentWrapper implements ComponentWrapper<Object> {
 
@@ -34,11 +34,29 @@ class ExchangeComponentWrapper implements ComponentWrapper<Object> {
 
 			if (optional.isPresent())
 			{
+				Class<?> returnType = method.getReturnType();
+				Parameter[] parameters = method.getParameters();
+
+				if (parameters.length == 0 || parameters[0].getType().isAssignableFrom(Request.class) ||
+						!(returnType.equals(Void.TYPE) || returnType.isAssignableFrom(Response.class)))
+				{
+					// log error
+					continue;
+				}
+
+				@SuppressWarnings("unchecked")
+				Class<? extends Request> requestClass = (Class<? extends Request>) parameters[0].getType();
+				@SuppressWarnings("unchecked")
+				Class<? extends Response> responseClass =
+						returnType.equals(Void.TYPE) ?
+								Response.class :
+								(Class<? extends Response>) returnType;
+
 				Annotation annotation = optional.get();
 
 				exchangeControllers.add(new ExchangeController(
 						new HttpTarget(HttpMethod.getMethod(annotation.getClass()), HttpTarget.pathOfMethod(annotation)),
-						request -> Try.to(() -> (Response) method.invoke(request))
+						new HttpPackage(method, requestClass, responseClass)
 				));
 			}
 		}

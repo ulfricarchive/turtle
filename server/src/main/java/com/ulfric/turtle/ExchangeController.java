@@ -3,12 +3,12 @@ package com.ulfric.turtle;
 class ExchangeController {
 
 	private final HttpTarget target;
-	private final HttpFunction function;
+	private final HttpPackage httpPackage;
 
-	ExchangeController(HttpTarget target, HttpFunction function)
+	ExchangeController(HttpTarget target, HttpPackage httpPackage)
 	{
 		this.target = target;
-		this.function = function;
+		this.httpPackage = httpPackage;
 	}
 
 	public HttpTarget getTarget()
@@ -16,9 +16,9 @@ class ExchangeController {
 		return this.target;
 	}
 
-	public HttpFunction getFunction()
+	public HttpPackage getHttpPackage()
 	{
-		return this.function;
+		return this.httpPackage;
 	}
 
 }
