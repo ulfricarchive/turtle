@@ -9,7 +9,9 @@ public enum HttpMethod {
 
 	GET(com.ulfric.turtle.GET.class),
 	POST(com.ulfric.turtle.POST.class),
-	DELETE(com.ulfric.turtle.DELETE.class);
+	DELETE(com.ulfric.turtle.DELETE.class),
+	PUT(com.ulfric.turtle.PUT.class),
+	PATCH(com.ulfric.turtle.PATCH.class);
 
 	private final Class<? extends Annotation> annotation;
 
