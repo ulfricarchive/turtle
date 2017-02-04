@@ -9,7 +9,6 @@ import java.util.Map;
 import javax.net.ssl.SSLContext;
 
 import org.apache.commons.collections4.map.CaseInsensitiveMap;
-import org.apache.commons.lang3.StringUtils;
 
 import com.google.gson.Gson;
 import com.ulfric.commons.cdi.ObjectFactory;
@@ -137,9 +136,7 @@ public class TurtleServer {
 		{
 			if (field.isAnnotationPresent(PARAM.class))
 			{
-				PARAM param = field.getAnnotation(PARAM.class);
-
-				String path = StringUtils.isEmpty(param.paramValue()) ? field.getName() : param.paramValue();
+				String path = field.getName();
 
 				Deque<String> deque = exchange.getQueryParameters().get(path);
 
@@ -148,14 +145,14 @@ public class TurtleServer {
 					continue;
 				}
 
-				String element = deque.element();
+				String param = deque.element();
 
-				if (element == null)
+				if (param == null)
 				{
 					continue;
 				}
 
-				Object value = new Gson().fromJson(element, field.getType());
+				Object value = new Gson().fromJson(param, field.getType());
 
 				field.setAccessible(true);
 

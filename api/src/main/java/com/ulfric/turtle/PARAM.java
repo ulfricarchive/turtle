@@ -9,6 +9,4 @@ import java.lang.annotation.Target;
 @Target(ElementType.FIELD)
 public @interface PARAM {
 
-	String paramValue() default "";
-
 }
