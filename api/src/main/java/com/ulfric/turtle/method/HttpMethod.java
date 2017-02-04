@@ -7,11 +7,11 @@ import java.util.stream.Stream;
 
 public enum HttpMethod {
 
-	GET(com.ulfric.turtle.method.GET.class),
-	POST(com.ulfric.turtle.method.POST.class),
-	DELETE(com.ulfric.turtle.method.DELETE.class),
-	PUT(com.ulfric.turtle.method.PUT.class),
-	PATCH(com.ulfric.turtle.method.PATCH.class);
+	GET(GET.class),
+	POST(POST.class),
+	DELETE(DELETE.class),
+	PUT(PUT.class),
+	PATCH(PATCH.class);
 
 	private final Class<? extends Annotation> annotation;
 
