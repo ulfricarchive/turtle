@@ -1,15 +1,18 @@
 package com.ulfric.turtle;
 
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.util.Deque;
 import java.util.HashMap;
 import java.util.Map;
 
 import javax.net.ssl.SSLContext;
 
 import org.apache.commons.collections4.map.CaseInsensitiveMap;
+import org.apache.commons.lang3.StringUtils;
 
+import com.google.gson.Gson;
 import com.ulfric.commons.cdi.ObjectFactory;
-import com.ulfric.commons.cdi.construct.InstanceUtils;
 import com.ulfric.commons.cdi.container.Container;
 import com.ulfric.commons.cdi.inject.Inject;
 import com.ulfric.commons.cdi.scope.Shared;
@@ -17,6 +20,7 @@ import com.ulfric.commons.exception.Try;
 
 import io.undertow.Undertow;
 import io.undertow.UndertowOptions;
+import io.undertow.server.HttpServerExchange;
 import io.undertow.util.Headers;
 
 @Shared
@@ -46,42 +50,7 @@ public class TurtleServer {
 		return Undertow.builder()
 				.setServerOption(UndertowOptions.ENABLE_HTTP2, true)
 				.addHttpsListener(8080, "localhost", Try.to(SSLContext::getDefault))
-				.setHandler(exchange ->
-				{
-					exchange.getResponseHeaders().put(Headers.CONTENT_TYPE, "text/plain");
-
-					Map<String, ExchangeController> pathControllers = this.allControllers.get(HttpMethod.valueOf(exchange.getRequestMethod().toString()));
-
-					ExchangeController controller = pathControllers.get(exchange.getRequestPath());
-					if (controller != null)
-					{
-						Request request = InstanceUtils.createOrNull(controller.getHttpPackage().getRequest());
-
-						if (request == null)
-						{
-							exchange.setStatusCode(500);
-
-							return;
-						}
-
-						Method method = controller.getHttpPackage().getMethod();
-
-						Object instance = this.factory.request(method.getDeclaringClass());
-
-						Object responseObject =
-								method.getParameterCount() == 1 ?
-										method.invoke(instance, request) :
-										method.invoke(instance);
-
-						Response response =
-								responseObject instanceof Response ?
-										(Response) responseObject :
-										new Response();
-
-						// We have a response!
-					}
-
-				})
+				.setHandler(this::handle)
 				.build();
 	}
 
@@ -105,11 +74,94 @@ public class TurtleServer {
 		this.undertow.stop();
 	}
 
-	public void registerExchange(ExchangeController exchangeController)
+	void registerExchange(ExchangeController exchangeController)
 	{
 		this.allControllers
 				.get(exchangeController.getTarget().getMethod())
 				.put(exchangeController.getTarget().getPath(), exchangeController);
+	}
+
+	private void handle(HttpServerExchange exchange) throws Exception
+	{
+		this.setResponseHeaders(exchange);
+
+		ExchangeController controller = this.getController(exchange);
+
+		if (controller != null)
+		{
+			Request request = this.factory.requestExact(controller.getHttpPackage().getRequest());
+
+			if (request == null)
+			{
+				exchange.setStatusCode(500);
+
+				return;
+			}
+
+			this.injectInto(exchange, request);
+
+			Method method = controller.getHttpPackage().getMethod();
+
+			Object instance = this.factory.request(method.getDeclaringClass());
+
+			Object responseObject =
+					method.getParameterCount() == 1 ?
+							method.invoke(instance, request) :
+							method.invoke(instance);
+
+			Response response =
+					responseObject instanceof Response ?
+							(Response) responseObject :
+							new Response();
+
+			exchange.getResponseSender().send(response.respond());
+		}
+
+	}
+
+	private void setResponseHeaders(HttpServerExchange exchange)
+	{
+		exchange.getResponseHeaders().put(Headers.CONTENT_TYPE, "text/plain");
+	}
+
+	private ExchangeController getController(HttpServerExchange exchange)
+	{
+		Map<String, ExchangeController> pathControllers = this.allControllers.get(HttpMethod.valueOf(exchange.getRequestMethod().toString()));
+
+		return pathControllers.get(exchange.getRequestPath());
+	}
+
+	private void injectInto(HttpServerExchange exchange, Request request)
+	{
+		for (Field field : request.getClass().getDeclaredFields())
+		{
+			if (field.isAnnotationPresent(PARAM.class))
+			{
+				PARAM param = field.getAnnotation(PARAM.class);
+
+				String path = StringUtils.isEmpty(param.paramValue()) ? field.getName() : param.paramValue();
+
+				Deque<String> deque = exchange.getQueryParameters().get(path);
+
+				if (deque == null)
+				{
+					continue;
+				}
+
+				String element = deque.element();
+
+				if (element == null)
+				{
+					continue;
+				}
+
+				Object value = new Gson().fromJson(element, field.getType());
+
+				field.setAccessible(true);
+
+				Try.to(() -> field.set(request, value));
+			}
+		}
 	}
 
 }
