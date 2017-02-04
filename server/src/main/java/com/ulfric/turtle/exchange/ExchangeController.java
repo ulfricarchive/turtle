@@ -1,6 +1,9 @@
-package com.ulfric.turtle;
+package com.ulfric.turtle.exchange;
 
-class ExchangeController {
+import com.ulfric.turtle.http.HttpPackage;
+import com.ulfric.turtle.http.HttpTarget;
+
+public class ExchangeController {
 
 	private final HttpTarget target;
 	private final HttpPackage httpPackage;

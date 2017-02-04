@@ -1,11 +1,12 @@
-package com.ulfric.turtle;
+package com.ulfric.turtle.exchange;
 
 import java.util.Set;
 
 import com.ulfric.commons.cdi.ObjectFactory;
 import com.ulfric.commons.cdi.container.SkeletalComponent;
+import com.ulfric.turtle.TurtleServer;
 
-class HttpExchangeComponent extends SkeletalComponent {
+public class HttpExchangeComponent extends SkeletalComponent {
 
 	private final ObjectFactory factory;
 	private final Set<ExchangeController> exchangeControllers;

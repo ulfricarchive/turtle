@@ -1,4 +1,4 @@
-package com.ulfric.turtle;
+package com.ulfric.turtle.method;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

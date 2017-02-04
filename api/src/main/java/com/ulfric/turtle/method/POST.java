@@ -1,4 +1,4 @@
-package com.ulfric.turtle;
+package com.ulfric.turtle.method;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -7,7 +7,7 @@ import java.lang.annotation.Target;
 
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
-public @interface PUT {
+public @interface POST {
 
 	String path() default "/";
 

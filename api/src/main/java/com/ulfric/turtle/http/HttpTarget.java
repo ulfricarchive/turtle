@@ -1,4 +1,4 @@
-package com.ulfric.turtle;
+package com.ulfric.turtle.http;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
@@ -6,6 +6,7 @@ import java.lang.reflect.Method;
 import org.apache.commons.lang3.reflect.MethodUtils;
 
 import com.ulfric.commons.exception.Try;
+import com.ulfric.turtle.method.HttpMethod;
 
 public class HttpTarget {
 

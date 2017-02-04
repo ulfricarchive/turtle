@@ -1,4 +1,4 @@
-package com.ulfric.turtle;
+package com.ulfric.turtle.method;
 
 import java.lang.annotation.Annotation;
 import java.util.IdentityHashMap;
@@ -7,11 +7,11 @@ import java.util.stream.Stream;
 
 public enum HttpMethod {
 
-	GET(com.ulfric.turtle.GET.class),
-	POST(com.ulfric.turtle.POST.class),
-	DELETE(com.ulfric.turtle.DELETE.class),
-	PUT(com.ulfric.turtle.PUT.class),
-	PATCH(com.ulfric.turtle.PATCH.class);
+	GET(com.ulfric.turtle.method.GET.class),
+	POST(com.ulfric.turtle.method.POST.class),
+	DELETE(com.ulfric.turtle.method.DELETE.class),
+	PUT(com.ulfric.turtle.method.PUT.class),
+	PATCH(com.ulfric.turtle.method.PATCH.class);
 
 	private final Class<? extends Annotation> annotation;
 

@@ -16,6 +16,12 @@ import com.ulfric.commons.cdi.container.Container;
 import com.ulfric.commons.cdi.inject.Inject;
 import com.ulfric.commons.cdi.scope.Shared;
 import com.ulfric.commons.exception.Try;
+import com.ulfric.turtle.exchange.ExchangeComponentWrapper;
+import com.ulfric.turtle.exchange.ExchangeController;
+import com.ulfric.turtle.message.Request;
+import com.ulfric.turtle.message.Response;
+import com.ulfric.turtle.method.HttpMethod;
+import com.ulfric.turtle.method.PARAM;
 
 import io.undertow.Undertow;
 import io.undertow.UndertowOptions;
@@ -73,7 +79,7 @@ public class TurtleServer {
 		this.undertow.stop();
 	}
 
-	void registerExchange(ExchangeController exchangeController)
+	public void registerExchange(ExchangeController exchangeController)
 	{
 		this.allControllers
 				.get(exchangeController.getTarget().getMethod())

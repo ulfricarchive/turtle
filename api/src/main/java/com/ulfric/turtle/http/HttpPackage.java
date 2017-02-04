@@ -1,6 +1,9 @@
-package com.ulfric.turtle;
+package com.ulfric.turtle.http;
 
 import java.lang.reflect.Method;
+
+import com.ulfric.turtle.message.Request;
+import com.ulfric.turtle.message.Response;
 
 public class HttpPackage {
 
