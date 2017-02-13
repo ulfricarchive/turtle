@@ -36,19 +36,24 @@ public class TurtleServer {
 
 	private final Map<HttpMethod, Map<String, ExchangeController>> allControllers = new HashMap<>();
 	private final Undertow undertow;
+	private final TurtleConfiguration configuration;
 
 	private ServiceFinder finder;
 
 	@Inject private ObjectFactory factory;
 	@Inject private GsonProvider gsonProvider;
 
+	private volatile boolean running = false;
+
 	private TurtleServer()
 	{
-		this.undertow = this.build();
+		this.configuration = TurtleConfiguration.loadConfiguration();
+		this.undertow = this.buildUndertowInstance();
 	}
 
-	private Undertow build()
+	private Undertow buildUndertowInstance()
 	{
+		TurtleConfiguration configuration = this.configuration;
 		return Undertow.builder()
 				.setServerOption(UndertowOptions.ENABLE_HTTP2, true)
 				.addHttpsListener(8080, "localhost", Try.to(SSLContext::getDefault))
@@ -79,14 +84,21 @@ public class TurtleServer {
 
 	}
 
-	private void start()
+	public void start()
 	{
 		this.undertow.start();
+		this.running = true;
+	}
+
+	public boolean isRunning()
+	{
+		return this.running;
 	}
 
 	public void stop()
 	{
 		this.undertow.stop();
+		this.running = false;
 	}
 
 	public void registerExchange(ExchangeController exchangeController)
