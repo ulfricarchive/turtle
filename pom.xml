@@ -18,7 +18,8 @@
 	<modules>
 		<module>api</module>
 		<module>server</module>
-	</modules>
+        <module>orchestration</module>
+    </modules>
 
 	<dependencies>
 		<dependency>
