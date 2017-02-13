@@ -40,6 +40,12 @@
 
     <dependencies>
         <dependency>
+            <groupId>com.google.cloud</groupId>
+            <artifactId>google-cloud</artifactId>
+            <version>0.9.0-alpha</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
             <groupId>com.ulfric</groupId>
             <artifactId>turtle-server</artifactId>
             <version>1.0.0</version>
