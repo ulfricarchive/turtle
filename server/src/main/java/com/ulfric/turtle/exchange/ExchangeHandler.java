@@ -1,5 +1,6 @@
 package com.ulfric.turtle.exchange;
 
+import java.lang.invoke.MethodHandle;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.Deque;
@@ -47,13 +48,15 @@ public class ExchangeHandler implements HttpHandler {
 			this.injectInto(exchange, request);
 
 			Method method = controller.getHttpPackage().getMethod();
+			MethodHandle handle = controller.getHttpPackage().getHandle();
 
 			Object instance = this.factory.request(method.getDeclaringClass());
 
-			Object responseObject =
+			Object responseObject = Try.to(() ->
 					method.getParameterCount() == 1 ?
-							method.invoke(instance, request) :
-							method.invoke(instance);
+							handle.invokeExact(instance, request) :
+							handle.invokeExact(instance)
+			);
 
 			Response response =
 					responseObject instanceof Response ?
