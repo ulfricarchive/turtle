@@ -36,7 +36,6 @@ public class TurtleServer {
 
 	private final Map<HttpMethod, Map<String, ExchangeController>> allControllers = new HashMap<>();
 	private final Undertow undertow;
-	private final TurtleConfiguration configuration;
 
 	private ServiceFinder finder;
 
@@ -47,13 +46,11 @@ public class TurtleServer {
 
 	private TurtleServer()
 	{
-		this.configuration = TurtleConfiguration.loadConfiguration();
 		this.undertow = this.buildUndertowInstance();
 	}
 
 	private Undertow buildUndertowInstance()
 	{
-		TurtleConfiguration configuration = this.configuration;
 		return Undertow.builder()
 				.setServerOption(UndertowOptions.ENABLE_HTTP2, true)
 				.addHttpsListener(8080, "localhost", Try.to(SSLContext::getDefault))
