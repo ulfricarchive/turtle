@@ -15,7 +15,6 @@ import com.ulfric.commons.exception.Try;
 import com.ulfric.turtle.exchange.ExchangeComponentWrapper;
 import com.ulfric.turtle.exchange.ExchangeController;
 import com.ulfric.turtle.exchange.ExchangeHandler;
-import com.ulfric.turtle.json.GsonProvider;
 import com.ulfric.turtle.method.HttpMethod;
 import com.ulfric.turtle.service.find.ServiceFinder;
 
@@ -79,8 +78,14 @@ public class TurtleServer {
 
 	public void stop()
 	{
-		this.undertow.stop();
-		this.running = false;
+		try
+		{
+			this.undertow.stop();
+		}
+		finally
+		{
+			this.running = false;
+		}
 	}
 
 	public void registerExchange(ExchangeController exchangeController)
