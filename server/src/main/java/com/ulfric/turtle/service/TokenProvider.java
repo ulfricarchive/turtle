@@ -1,7 +1,7 @@
 package com.ulfric.turtle.service;
 
-import java.io.File;
 import java.nio.file.Files;
+import java.nio.file.Path;
 
 import com.ulfric.commons.cdi.initialize.Initialize;
 import com.ulfric.commons.cdi.inject.Inject;
@@ -18,19 +18,19 @@ public class TokenProvider {
 	@Initialize
 	private void init()
 	{
-		File authenticationFile = this.getAuthenticationFile();
+		Path authenticationPath = this.getAuthenticationPath();
 
-		this.token = this.getTokenFromFile(authenticationFile);
+		this.token = this.getTokenFromPath(authenticationPath);
 	}
 
-	private File getAuthenticationFile()
+	private Path getAuthenticationPath()
 	{
-		return this.directory.getFileInDirectory("authtoken");
+		return this.directory.getPathInDirectory("authtoken");
 	}
 
-	private String getTokenFromFile(File file)
+	private String getTokenFromPath(Path path)
 	{
-		return Try.to(() -> Files.readAllLines(file.toPath()).get(0));
+		return Try.to(() -> Files.readAllLines(path).get(0));
 	}
 
 	public String getJFrogAuthenticationToken()
