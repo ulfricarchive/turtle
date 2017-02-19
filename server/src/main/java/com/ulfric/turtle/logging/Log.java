@@ -1,4 +1,4 @@
-package com.ulfric.turtle.log;
+package com.ulfric.turtle.logging;
 
 import java.util.Collections;
 
@@ -19,7 +19,7 @@ import com.ulfric.commons.cdi.scope.Shared;
 import com.ulfric.commons.exception.ThrowableUtils;
 
 @Shared
-public class LoggingProvider {
+public class Log {
 
 	private static final String LOG_NAME = "turtle";
 
@@ -32,25 +32,25 @@ public class LoggingProvider {
 		return this.logging;
 	}
 
-	public void log(String string)
+	public void write(String string)
 	{
-		this.log(string, Severity.INFO);
+		this.write(string, Severity.INFO);
 	}
 
-	public void log(String string, Severity severity)
+	public void write(String string, Severity severity)
 	{
 		LogEntry entry = this.entryOf(Payload.StringPayload.of(string), severity);
 
 		this.logging.write(Collections.singleton(entry));
 	}
 
-	public void log(Throwable throwable)
+	public void write(Throwable throwable)
 	{
 		StackTraceElement trace = this.getFinalElement(throwable);
 
 		try (ReportErrorsServiceClient reportErrorsServiceClient = ReportErrorsServiceClient.create())
 		{
-			ProjectName projectName = ProjectName.create(LoggingProvider.LOG_NAME);
+			ProjectName projectName = ProjectName.create(Log.LOG_NAME);
 
 			SourceLocation source = SourceLocation.newBuilder()
 					.setFilePath(trace.getFileName())
@@ -82,7 +82,7 @@ public class LoggingProvider {
 	private LogEntry entryOf(Payload<?> payload, Severity severity)
 	{
 		return LogEntry.newBuilder(payload)
-				.setLogName(LoggingProvider.LOG_NAME)
+				.setLogName(Log.LOG_NAME)
 				.setSeverity(severity)
 				.setResource(MonitoredResource.newBuilder("global").build())
 				.build();

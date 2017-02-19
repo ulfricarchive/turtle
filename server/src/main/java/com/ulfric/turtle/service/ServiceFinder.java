@@ -12,7 +12,7 @@ import java.util.jar.JarFile;
 import com.ulfric.commons.cdi.inject.Inject;
 import com.ulfric.commons.cdi.scope.Shared;
 import com.ulfric.commons.exception.Try;
-import com.ulfric.turtle.log.LoggingProvider;
+import com.ulfric.turtle.logging.Log;
 
 @Shared
 public class ServiceFinder {
@@ -23,7 +23,7 @@ public class ServiceFinder {
 	private final File servicesDirectory;
 
 	@Inject private DirectoryProvider directory;
-	@Inject private LoggingProvider logging;
+	@Inject private Log logger;
 	@Inject private TokenProvider token;
 
 	public ServiceFinder()
@@ -78,7 +78,7 @@ public class ServiceFinder {
 		}
 		catch (IOException exception)
 		{
-			this.logging.log(exception);
+			this.logger.write(exception);
 		}
 	}
 
