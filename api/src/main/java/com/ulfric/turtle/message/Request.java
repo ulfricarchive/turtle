@@ -1,5 +1,5 @@
 package com.ulfric.turtle.message;
 
-public class Request extends Message {
+public interface Request extends Message {
 
 }

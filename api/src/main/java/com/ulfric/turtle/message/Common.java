@@ -1,17 +1,9 @@
 package com.ulfric.turtle.message;
 
-public class Common {
+public interface Common {
 
-	private String application;
+	String getApplication();
 
-	public String getApplication()
-	{
-		return application;
-	}
-
-	public void setApplication(String application)
-	{
-		this.application = application;
-	}
+	void setApplication(String application);
 
 }

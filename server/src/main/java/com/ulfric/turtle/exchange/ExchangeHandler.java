@@ -14,6 +14,7 @@ import com.ulfric.turtle.TurtleServer;
 import com.ulfric.turtle.json.GsonProvider;
 import com.ulfric.turtle.message.Request;
 import com.ulfric.turtle.message.Response;
+import com.ulfric.turtle.message.TurtleResponse;
 import com.ulfric.turtle.method.PARAM;
 
 import io.undertow.server.HttpHandler;
@@ -61,7 +62,7 @@ public class ExchangeHandler implements HttpHandler {
 			Response response =
 					responseObject instanceof Response ?
 							(Response) responseObject :
-							new Response();
+							new TurtleResponse();
 
 			exchange.getResponseSender().send(response.respond());
 		}

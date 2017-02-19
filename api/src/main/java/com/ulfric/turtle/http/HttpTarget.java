@@ -8,28 +8,13 @@ import org.apache.commons.lang3.reflect.MethodUtils;
 import com.ulfric.commons.exception.Try;
 import com.ulfric.turtle.method.HttpMethod;
 
-public class HttpTarget {
+public interface HttpTarget {
 
-	private final HttpMethod method;
-	private final String path;
+	HttpMethod getMethod();
 
-	public HttpTarget(HttpMethod method, String path)
-	{
-		this.method = method;
-		this.path = path;
-	}
+	String getPath();
 
-	public HttpMethod getMethod()
-	{
-		return method;
-	}
-
-	public String getPath()
-	{
-		return path;
-	}
-
-	public static String pathOfMethod(Annotation annotation)
+	static String pathOfMethod(Annotation annotation)
 	{
 		Method method = MethodUtils.getMatchingMethod(annotation.getClass(), "path");
 

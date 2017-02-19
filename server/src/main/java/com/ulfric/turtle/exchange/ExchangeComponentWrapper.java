@@ -13,14 +13,15 @@ import com.ulfric.commons.cdi.ObjectFactory;
 import com.ulfric.commons.cdi.container.Component;
 import com.ulfric.commons.cdi.container.ComponentWrapper;
 import com.ulfric.commons.cdi.inject.Inject;
+import com.ulfric.turtle.http.TurtleHttpPackage;
+import com.ulfric.turtle.http.HttpTarget;
+import com.ulfric.turtle.http.TurtleHttpTarget;
+import com.ulfric.turtle.message.Request;
+import com.ulfric.turtle.message.Response;
 import com.ulfric.turtle.method.DELETE;
 import com.ulfric.turtle.method.GET;
 import com.ulfric.turtle.method.HttpMethod;
-import com.ulfric.turtle.http.HttpPackage;
-import com.ulfric.turtle.http.HttpTarget;
 import com.ulfric.turtle.method.POST;
-import com.ulfric.turtle.message.Request;
-import com.ulfric.turtle.message.Response;
 
 public class ExchangeComponentWrapper implements ComponentWrapper<Object> {
 
@@ -63,8 +64,8 @@ public class ExchangeComponentWrapper implements ComponentWrapper<Object> {
 				Annotation annotation = optional.get();
 
 				exchangeControllers.add(new ExchangeController(
-						new HttpTarget(HttpMethod.getMethod(annotation.getClass()), HttpTarget.pathOfMethod(annotation)),
-						new HttpPackage(method, requestClass, responseClass)
+						new TurtleHttpTarget(HttpMethod.getMethod(annotation.getClass()), HttpTarget.pathOfMethod(annotation)),
+						new TurtleHttpPackage(method, requestClass, responseClass)
 				));
 			}
 		}
