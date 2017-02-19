@@ -8,9 +8,9 @@ import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.jar.JarFile;
 
 import com.ulfric.commons.artifact.Artifact;
+import com.ulfric.commons.cdi.ObjectFactory;
 import com.ulfric.commons.cdi.inject.Inject;
 import com.ulfric.commons.cdi.scope.Shared;
 import com.ulfric.commons.exception.Try;
@@ -27,6 +27,7 @@ public class ServiceFinder {
 
 	private final Path servicesDirectory;
 
+	@Inject private ObjectFactory factory;
 	@Inject private DirectoryProvider directory;
 	@Inject private Log logger;
 	@Inject private TokenProvider token;
@@ -51,18 +52,19 @@ public class ServiceFinder {
 	public ServiceLoader find(Artifact artifact)
 	{
 		Path path = this.getPathToSaveTo(artifact);
-		JarFile jar = this.downloadJar(artifact, path);
+		this.downloadJar(artifact, path);
 
-		return new ServiceLoader(jar, path);
+		ServiceLoader loader = this.factory.requestExact(ServiceLoader.class);
+		loader.initializePath(path);
+
+		return loader;
 	}
 
-	private JarFile downloadJar(Artifact artifact, Path path)
+	private void downloadJar(Artifact artifact, Path path)
 	{
 		URL url = this.getUrlFor(artifact);
 
 		this.downloadFile(path, url);
-
-		return Try.to(() -> new JarFile(path.toFile(), false));
 	}
 
 	private void downloadFile(Path to, URL url)

@@ -36,4 +36,9 @@ public enum HttpMethod {
 		return HttpMethod.valueMap.get(annotation);
 	}
 
+	public static boolean isHttpAnnotation(Class<? extends Annotation> annotation)
+	{
+		return HttpMethod.valueMap.containsKey(annotation);
+	}
+
 }
