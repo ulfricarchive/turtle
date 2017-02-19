@@ -1,10 +1,10 @@
 package com.ulfric.turtle.message;
 
-public interface Response extends Message {
+public class Response extends Message {
 
-	default String respond()
+	public String respond()
 	{
-		return "Hello, World!";
+		return "DEFAULT TURTLE RESPONSE";
 	}
 
 }

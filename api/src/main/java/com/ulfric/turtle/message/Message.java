@@ -1,9 +1,17 @@
 package com.ulfric.turtle.message;
 
-public interface Message {
+public class Message {
 
-	Common getCommon();
+	private Common common;
 
-	void setCommon(Common common);
+	public Common getCommon()
+	{
+		return this.common;
+	}
+
+	public void setCommon(Common common)
+	{
+		this.common = common;
+	}
 
 }
