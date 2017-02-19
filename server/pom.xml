@@ -40,6 +40,7 @@
 	</build>
 
 	<dependencies>
+        <!-- Turtle -->
 		<dependency>
 			<groupId>com.ulfric</groupId>
 			<artifactId>turtle-api</artifactId>
@@ -47,11 +48,28 @@
 			<scope>compile</scope>
 		</dependency>
         <dependency>
+            <groupId>com.ulfric</groupId>
+            <artifactId>turtle-client</artifactId>
+            <version>1.0.0</version>
+            <scope>compile</scope>
+        </dependency>
+
+        <!-- Google -->
+        <dependency>
+            <groupId>com.google.cloud</groupId>
+            <artifactId>google-cloud</artifactId>
+            <version>0.9.2-alpha</version>
+            <scope>compile</scope>
+        </dependency>
+
+        <!-- HTTP -->
+        <dependency>
             <groupId>io.undertow</groupId>
             <artifactId>undertow-core</artifactId>
             <version>1.4.7.Final</version>
             <scope>compile</scope>
         </dependency>
+
 	</dependencies>
 
 </project>

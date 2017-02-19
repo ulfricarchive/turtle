@@ -13,4 +13,13 @@
 	<artifactId>turtle-api</artifactId>
     <packaging>jar</packaging>
 
+    <dependencies>
+        <dependency>
+            <groupId>com.ulfric</groupId>
+            <artifactId>turtle-client</artifactId>
+            <version>1.0.0</version>
+            <scope>provided</scope>
+        </dependency>
+    </dependencies>
+
 </project>
