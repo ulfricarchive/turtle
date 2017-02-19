@@ -7,6 +7,7 @@ import javax.net.ssl.SSLContext;
 
 import org.apache.commons.collections4.map.CaseInsensitiveMap;
 
+import com.ulfric.commons.artifact.Artifact;
 import com.ulfric.commons.cdi.ObjectFactory;
 import com.ulfric.commons.cdi.container.Container;
 import com.ulfric.commons.cdi.inject.Inject;
@@ -17,6 +18,7 @@ import com.ulfric.turtle.exchange.ExchangeController;
 import com.ulfric.turtle.exchange.ExchangeHandler;
 import com.ulfric.turtle.method.HttpMethod;
 import com.ulfric.turtle.service.find.ServiceFinder;
+import com.ulfric.turtle.service.load.ServiceLoader;
 
 import io.undertow.Undertow;
 import io.undertow.UndertowOptions;
@@ -33,6 +35,7 @@ public class TurtleServer {
 		server.start();
 	}
 
+	private final Map<Artifact, ServiceLoader> services = new HashMap<>();
 	private final Map<HttpMethod, Map<String, ExchangeController>> allControllers = new HashMap<>();
 	private final Undertow undertow;
 
@@ -86,6 +89,23 @@ public class TurtleServer {
 		{
 			this.running = false;
 		}
+	}
+
+	public void loadService(Artifact artifact)
+	{
+		ServiceLoader loader = this.finder.find(artifact);
+		this.services.put(artifact, loader);
+
+		loader.load();
+		loader.enable();
+	}
+
+	public void unloadService(Artifact artifact)
+	{
+		ServiceLoader loader = this.services.get(artifact);
+
+		loader.disable();
+		this.services.remove(artifact);
 	}
 
 	public void registerExchange(ExchangeController exchangeController)

@@ -52,6 +52,11 @@ public final class ServiceLoader {
 		this.services.forEach(Container::enable);
 	}
 
+	public void disable()
+	{
+		this.services.forEach(Container::disable);
+	}
+
 	private void readClasses(ServiceClassLoader classLoader)
 	{
 		classLoader.getClasses().values().forEach(this::readClass);
