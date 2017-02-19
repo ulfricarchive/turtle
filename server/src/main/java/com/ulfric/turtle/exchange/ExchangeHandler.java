@@ -58,7 +58,7 @@ public class ExchangeHandler implements HttpHandler {
 							(Response) responseObject :
 							new Response();
 
-			exchange.getResponseSender().send(response.respond());
+			exchange.getResponseSender().send(this.gsonProvider.getGson().toJson(response));
 		}
 	}
 
