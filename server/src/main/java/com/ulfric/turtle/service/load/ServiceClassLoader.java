@@ -31,7 +31,7 @@ public final class ServiceClassLoader extends URLClassLoader {
 		return this.classes.computeIfAbsent(name, ignored -> Try.to(() -> super.findClass(name)));
 	}
 
-	public Map<String, Class<?>> getClasses()
+	Map<String, Class<?>> getClasses()
 	{
 		return classes;
 	}

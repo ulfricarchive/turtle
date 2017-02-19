@@ -37,10 +37,8 @@ public class TurtleServer {
 	private final Map<HttpMethod, Map<String, ExchangeController>> allControllers = new HashMap<>();
 	private final Undertow undertow;
 
-	private ServiceFinder finder;
-
 	@Inject private ObjectFactory factory;
-	@Inject private GsonProvider gsonProvider;
+	@Inject private ServiceFinder finder;
 
 	private volatile boolean running = false;
 
@@ -66,19 +64,6 @@ public class TurtleServer {
 		}
 
 		Container.registerComponentWrapper(Object.class, this.factory.requestExact(ExchangeComponentWrapper.class));
-
-		this.findServices();
-		this.loadServices();
-	}
-
-	private void findServices()
-	{
-		this.finder = this.factory.requestExact(ServiceFinder.class);
-	}
-
-	private void loadServices()
-	{
-
 	}
 
 	public void start()
@@ -103,6 +88,19 @@ public class TurtleServer {
 		this.allControllers
 				.get(exchangeController.getTarget().getMethod())
 				.put(exchangeController.getTarget().getPath(), exchangeController);
+	}
+
+	public void unregisterExchange(ExchangeController exchangeController)
+	{
+		if (this.allControllers
+				.get(exchangeController.getTarget().getMethod())
+				.get(exchangeController.getTarget().getPath())
+				.equals(exchangeController))
+		{
+			this.allControllers
+					.get(exchangeController.getTarget().getMethod())
+					.remove(exchangeController.getTarget().getPath());
+		}
 	}
 
 	public ExchangeController getController(HttpServerExchange exchange)

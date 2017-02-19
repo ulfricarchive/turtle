@@ -1,28 +1,25 @@
 package com.ulfric.turtle.service.load;
 
 import java.io.IOException;
-import java.lang.annotation.Annotation;
-import java.lang.reflect.Method;
 import java.nio.file.FileSystem;
 import java.nio.file.FileSystems;
 import java.nio.file.Path;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.stream.Stream;
 
 import com.ulfric.commons.cdi.ObjectFactory;
 import com.ulfric.commons.cdi.container.Container;
 import com.ulfric.commons.cdi.inject.Inject;
+import com.ulfric.turtle.TurtleServer;
 import com.ulfric.turtle.TurtleService;
 import com.ulfric.turtle.logging.Log;
-import com.ulfric.turtle.method.HttpMethod;
 
 public final class ServiceLoader {
 
 	private final Set<TurtleService> services = new HashSet<>();
-	private final Set<Object> httpHandlers = new HashSet<>();
 
 	@Inject private ObjectFactory factory;
+	@Inject private TurtleServer server;
 	@Inject private Log logger;
 
 	private Path path;
@@ -53,12 +50,6 @@ public final class ServiceLoader {
 	public void enable()
 	{
 		this.services.forEach(Container::enable);
-		this.httpHandlers.forEach(this::enableHttpHandler);
-	}
-
-	private void enableHttpHandler(Object instance)
-	{
-
 	}
 
 	private void readClasses(ServiceClassLoader classLoader)
@@ -75,18 +66,6 @@ public final class ServiceLoader {
 
 			this.loadService(serviceClass);
 		}
-
-		if (Stream.of(clazz.getDeclaredMethods()).anyMatch(this::isHttpMethod))
-		{
-			this.loadHttpClass(clazz);
-		}
-	}
-
-	private boolean isHttpMethod(Method method)
-	{
-		return Stream.of(method.getAnnotations())
-				.map(Annotation::getClass)
-				.anyMatch(HttpMethod::isHttpAnnotation);
 	}
 
 	private void loadService(Class<? extends TurtleService> serviceClass)
@@ -94,13 +73,6 @@ public final class ServiceLoader {
 		TurtleService service = this.factory.requestExact(serviceClass);
 
 		this.services.add(service);
-	}
-
-	private void loadHttpClass(Class<?> httpClass)
-	{
-		Object instance = this.factory.request(httpClass);
-
-		this.httpHandlers.add(instance);
 	}
 
 	public Path getPath()
