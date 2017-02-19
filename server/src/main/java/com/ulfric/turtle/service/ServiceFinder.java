@@ -1,12 +1,13 @@
 package com.ulfric.turtle.service;
 
-import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.jar.JarFile;
 
 import com.ulfric.commons.cdi.inject.Inject;
@@ -20,7 +21,7 @@ public class ServiceFinder {
 	private static final String REPO_URL = "http://repo.dev.ulfric.com/artifactory/all" +
 			"/{group}/{artifact}/{version}/{artifact}-{version}.jar";
 
-	private final File servicesDirectory;
+	private final Path servicesDirectory;
 
 	@Inject private DirectoryProvider directory;
 	@Inject private Log logger;
@@ -31,16 +32,13 @@ public class ServiceFinder {
 		this.servicesDirectory = this.loadServicesDirectory();
 	}
 
-	private File loadServicesDirectory()
+	private Path loadServicesDirectory()
 	{
-		File folder = this.directory.getFileInDirectory("services");
+		Path folder = this.directory.getPathInDirectory("services");
 
-		if (!folder.exists())
+		if (!Files.exists(folder))
 		{
-			if (!folder.mkdirs())
-			{
-				throw new RuntimeException("No permission to create services directory");
-			}
+			Try.to(() -> Files.createDirectory(folder));
 		}
 
 		return folder;
@@ -55,15 +53,15 @@ public class ServiceFinder {
 
 	private JarFile downloadJar(ServiceArtifact artifact)
 	{
-		File file = this.getFileToSaveTo(artifact);
+		Path path = this.getPathToSaveTo(artifact);
 		URL url = this.getUrlFor(artifact);
 
-		this.downloadFile(file, url);
+		this.downloadFile(path, url);
 
-		return Try.to(() -> new JarFile(file, false));
+		return Try.to(() -> new JarFile(path.toFile(), false));
 	}
 
-	private void downloadFile(File to, URL url)
+	private void downloadFile(Path to, URL url)
 	{
 		try
 		{
@@ -72,7 +70,7 @@ public class ServiceFinder {
 			this.authenticate(connection);
 
 			ReadableByteChannel channel = Channels.newChannel(connection.getInputStream());
-			FileOutputStream output = new FileOutputStream(to);
+			FileOutputStream output = new FileOutputStream(to.toFile());
 
 			output.getChannel().transferFrom(channel, 0, Long.MAX_VALUE);
 		}
@@ -82,10 +80,9 @@ public class ServiceFinder {
 		}
 	}
 
-	private File getFileToSaveTo(ServiceArtifact artifact)
+	private Path getPathToSaveTo(ServiceArtifact artifact)
 	{
-		return new File(
-				this.servicesDirectory,
+		return this.servicesDirectory.resolve(
 				artifact.getArtifact() + "-" + artifact.getVersion().getFullVersion() + ".jar"
 		);
 	}

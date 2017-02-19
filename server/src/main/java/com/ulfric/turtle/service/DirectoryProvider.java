@@ -1,7 +1,8 @@
 package com.ulfric.turtle.service;
 
-import java.io.File;
 import java.net.URL;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 import com.ulfric.commons.cdi.scope.Shared;
 import com.ulfric.commons.exception.Try;
@@ -9,27 +10,26 @@ import com.ulfric.commons.exception.Try;
 @Shared
 public class DirectoryProvider {
 
-	private final File directory;
+	private final Path directory;
 
 	public DirectoryProvider()
 	{
 		this.directory = this.loadDirectory();
-		this.directory.mkdirs();
 	}
 
-	public File getDirectory()
+	public Path getDirectory()
 	{
 		return this.directory;
 	}
 
-	public File getFileInDirectory(String name)
+	public Path getPathInDirectory(String name)
 	{
-		return new File(this.directory, name);
+		return this.directory.resolve(name);
 	}
 
-	private File loadDirectory()
+	private Path loadDirectory()
 	{
-		return Try.to(() -> new File(this.jarUrl().toURI()));
+		return Try.to(() -> Paths.get(this.jarUrl().toURI()));
 	}
 
 	private URL jarUrl()
