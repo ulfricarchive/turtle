@@ -17,7 +17,7 @@ import com.ulfric.turtle.exchange.ExchangeController;
 import com.ulfric.turtle.exchange.ExchangeHandler;
 import com.ulfric.turtle.json.GsonProvider;
 import com.ulfric.turtle.method.HttpMethod;
-import com.ulfric.turtle.service.ServiceFinder;
+import com.ulfric.turtle.service.find.ServiceFinder;
 
 import io.undertow.Undertow;
 import io.undertow.UndertowOptions;

@@ -1,4 +1,4 @@
-package com.ulfric.turtle.service;
+package com.ulfric.turtle.service.find;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -15,6 +15,9 @@ import com.ulfric.commons.cdi.inject.Inject;
 import com.ulfric.commons.cdi.scope.Shared;
 import com.ulfric.commons.exception.Try;
 import com.ulfric.turtle.logging.Log;
+import com.ulfric.turtle.service.DirectoryProvider;
+import com.ulfric.turtle.service.TokenProvider;
+import com.ulfric.turtle.service.load.ServiceLoader;
 
 @Shared
 public class ServiceFinder {
@@ -47,14 +50,14 @@ public class ServiceFinder {
 
 	public ServiceLoader find(Artifact artifact)
 	{
-		JarFile jar = this.downloadJar(artifact);
+		Path path = this.getPathToSaveTo(artifact);
+		JarFile jar = this.downloadJar(artifact, path);
 
-		return new ServiceLoader(jar);
+		return new ServiceLoader(jar, path);
 	}
 
-	private JarFile downloadJar(Artifact artifact)
+	private JarFile downloadJar(Artifact artifact, Path path)
 	{
-		Path path = this.getPathToSaveTo(artifact);
 		URL url = this.getUrlFor(artifact);
 
 		this.downloadFile(path, url);
