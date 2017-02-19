@@ -3,6 +3,7 @@ package com.ulfric.turtle.service;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
@@ -19,25 +20,20 @@ public class ServiceFinder {
 	private static final String REPO_URL = "http://repo.dev.ulfric.com/artifactory/all" +
 			"/{group}/{artifact}/{version}/{artifact}-{version}.jar";
 
-	private final File directory;
 	private final File servicesDirectory;
 
+	@Inject private DirectoryProvider directory;
 	@Inject private LoggingProvider logging;
+	@Inject private TokenProvider token;
 
 	public ServiceFinder()
 	{
-		this.directory = this.loadDirectory();
 		this.servicesDirectory = this.loadServicesDirectory();
-	}
-
-	private File loadDirectory()
-	{
-		return Try.to(() -> new File(this.jarUrl().toURI()));
 	}
 
 	private File loadServicesDirectory()
 	{
-		File folder = new File(this.directory, "services");
+		File folder = this.directory.getFileInDirectory("services");
 
 		if (!folder.exists())
 		{
@@ -71,7 +67,11 @@ public class ServiceFinder {
 	{
 		try
 		{
-			ReadableByteChannel channel = Channels.newChannel(url.openStream());
+			HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+			this.setPost(connection);
+			this.authenticate(connection);
+
+			ReadableByteChannel channel = Channels.newChannel(connection.getInputStream());
 			FileOutputStream output = new FileOutputStream(to);
 
 			output.getChannel().transferFrom(channel, 0, Long.MAX_VALUE);
@@ -107,9 +107,19 @@ public class ServiceFinder {
 		return id.replace(".", "/");
 	}
 
-	private URL jarUrl()
+	private void setPost(HttpURLConnection connection)
 	{
-		return this.getClass().getProtectionDomain().getCodeSource().getLocation();
+		Try.to(() -> connection.setRequestMethod("POST"));
+		connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+		connection.setRequestProperty("Content-Language", "en-US");
+		connection.setUseCaches(false);
+		connection.setDoInput(true);
+		connection.setDoOutput(true);
+	}
+
+	private void authenticate(HttpURLConnection connection)
+	{
+		connection.setRequestProperty("X-JFrog-Art-Api", this.token.getJFrogAuthenticationToken());
 	}
 
 }
