@@ -1,10 +1,8 @@
 package com.ulfric.turtle.exchange;
 
 import java.lang.invoke.MethodHandle;
-import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.Deque;
-import java.util.stream.Stream;
 
 import com.ulfric.commons.cdi.ObjectFactory;
 import com.ulfric.commons.cdi.inject.Inject;
@@ -14,7 +12,6 @@ import com.ulfric.turtle.TurtleServer;
 import com.ulfric.turtle.json.GsonProvider;
 import com.ulfric.turtle.message.Request;
 import com.ulfric.turtle.message.Response;
-import com.ulfric.turtle.method.PARAM;
 
 import io.undertow.server.HttpHandler;
 import io.undertow.server.HttpServerExchange;
@@ -36,7 +33,7 @@ public class ExchangeHandler implements HttpHandler {
 
 		if (controller != null)
 		{
-			Request request = this.factory.requestExact(controller.getHttpPackage().getRequest());
+			Request request = this.getRequest(exchange, controller);
 
 			if (request == null)
 			{
@@ -44,8 +41,6 @@ public class ExchangeHandler implements HttpHandler {
 
 				return;
 			}
-
-			this.injectInto(exchange, request);
 
 			Method method = controller.getHttpPackage().getMethod();
 			MethodHandle handle = controller.getHttpPackage().getHandle();
@@ -72,32 +67,17 @@ public class ExchangeHandler implements HttpHandler {
 		exchange.getResponseHeaders().put(Headers.CONTENT_TYPE, "text/plain");
 	}
 
-	private void injectInto(HttpServerExchange exchange, Request request)
+	private Request getRequest(HttpServerExchange exchange, ExchangeController controller)
 	{
-		Stream.of(request.getClass().getDeclaredFields())
-				.filter(field -> field.isAnnotationPresent(PARAM.class))
-				.forEach(field ->
-				{
-					String param = this.getParameter(exchange, field);
-
-					if (param == null)
-					{
-						return;
-					}
-
-					Object value = this.gsonProvider.getGson().fromJson(param, field.getType());
-
-					field.setAccessible(true);
-
-					Try.to(() -> field.set(request, value));
-				});
+		return this.gsonProvider.getGson().fromJson(
+				this.getPayload(exchange),
+				controller.getHttpPackage().getRequest()
+		);
 	}
 
-	private String getParameter(HttpServerExchange exchange, Field field)
+	private String getPayload(HttpServerExchange exchange)
 	{
-		String path = field.getName();
-
-		Deque<String> deque = exchange.getQueryParameters().get(path);
+		Deque<String> deque = exchange.getQueryParameters().get("payload");
 
 		if (deque == null)
 		{
