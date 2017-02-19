@@ -1,6 +1,8 @@
 package com.ulfric.turtle.message;
 
-public class Common {
+import com.ulfric.commons.bean.Bean;
+
+public class Common extends Bean<Common> {
 
 	private String application;
 
