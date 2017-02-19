@@ -10,6 +10,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.jar.JarFile;
 
+import com.ulfric.commons.artifact.Artifact;
 import com.ulfric.commons.cdi.inject.Inject;
 import com.ulfric.commons.cdi.scope.Shared;
 import com.ulfric.commons.exception.Try;
@@ -44,14 +45,14 @@ public class ServiceFinder {
 		return folder;
 	}
 
-	public ServiceLoader find(ServiceArtifact artifact)
+	public ServiceLoader find(Artifact artifact)
 	{
 		JarFile jar = this.downloadJar(artifact);
 
 		return new ServiceLoader(jar);
 	}
 
-	private JarFile downloadJar(ServiceArtifact artifact)
+	private JarFile downloadJar(Artifact artifact)
 	{
 		Path path = this.getPathToSaveTo(artifact);
 		URL url = this.getUrlFor(artifact);
@@ -80,21 +81,21 @@ public class ServiceFinder {
 		}
 	}
 
-	private Path getPathToSaveTo(ServiceArtifact artifact)
+	private Path getPathToSaveTo(Artifact artifact)
 	{
 		return this.servicesDirectory.resolve(
-				artifact.getArtifact() + "-" + artifact.getVersion().getFullVersion() + ".jar"
+				artifact.getArtifact() + "-" + artifact.getVersion().getFull() + ".jar"
 		);
 	}
 
-	private URL getUrlFor(ServiceArtifact artifact)
+	private URL getUrlFor(Artifact artifact)
 	{
 		return Try.to(() ->
 				new URL(
 						ServiceFinder.REPO_URL
 						.replace("{group}", this.formatMavenId(artifact.getGroup()))
 						.replace("{artifact}", this.formatMavenId(artifact.getArtifact()))
-						.replace("{version}", artifact.getVersion().getFullVersion())
+						.replace("{version}", artifact.getVersion().getFull())
 				)
 		);
 	}
