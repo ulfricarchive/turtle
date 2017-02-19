@@ -6,14 +6,12 @@ import java.io.IOException;
 import java.net.URL;
 import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.jar.JarFile;
 
-import com.ulfric.commons.cdi.ObjectFactory;
 import com.ulfric.commons.cdi.inject.Inject;
 import com.ulfric.commons.cdi.scope.Shared;
 import com.ulfric.commons.exception.Try;
-import com.ulfric.turtle.TurtleServer;
+import com.ulfric.turtle.log.LoggingProvider;
 
 @Shared
 public class ServiceFinder {
@@ -23,10 +21,8 @@ public class ServiceFinder {
 
 	private final File directory;
 	private final File servicesDirectory;
-	private final Set<ServiceLoader> loaders = new HashSet<>();
 
-	@Inject private ObjectFactory factory;
-	@Inject private TurtleServer server;
+	@Inject private LoggingProvider logging;
 
 	public ServiceFinder()
 	{
@@ -54,21 +50,35 @@ public class ServiceFinder {
 		return folder;
 	}
 
-	public void downloadJar(ServiceArtifact artifact)
+	public ServiceLoader find(ServiceArtifact artifact)
+	{
+		JarFile jar = this.downloadJar(artifact);
+
+		return new ServiceLoader(jar);
+	}
+
+	private JarFile downloadJar(ServiceArtifact artifact)
 	{
 		File file = this.getFileToSaveTo(artifact);
 		URL url = this.getUrlFor(artifact);
 
+		this.downloadFile(file, url);
+
+		return Try.to(() -> new JarFile(file, false));
+	}
+
+	private void downloadFile(File to, URL url)
+	{
 		try
 		{
 			ReadableByteChannel channel = Channels.newChannel(url.openStream());
-			FileOutputStream output = new FileOutputStream(file);
+			FileOutputStream output = new FileOutputStream(to);
 
 			output.getChannel().transferFrom(channel, 0, Long.MAX_VALUE);
 		}
-		catch (IOException e)
+		catch (IOException exception)
 		{
-
+			this.logging.log(exception);
 		}
 	}
 
