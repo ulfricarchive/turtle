@@ -10,13 +10,13 @@
         <version>1.0.0</version>
     </parent>
 
-    <artifactId>turtle-server-registry-service</artifactId>
+    <artifactId>turtle-server-health-service</artifactId>
     <packaging>jar</packaging>
 
     <dependencies>
         <dependency>
             <groupId>com.ulfric</groupId>
-            <artifactId>turtle-server-resgistry-model</artifactId>
+            <artifactId>turtle-server-health-model</artifactId>
             <version>1.0.0</version>
             <scope>compile</scope>
         </dependency>

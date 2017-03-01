@@ -24,6 +24,8 @@
         <module>parent</module>
         <module>server-registry-model</module>
         <module>server-registry-service</module>
+        <module>server-health-model</module>
+        <module>server-health-service</module>
     </modules>
 
 	<dependencies>

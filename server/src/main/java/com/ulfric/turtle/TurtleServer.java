@@ -16,6 +16,11 @@ import com.ulfric.commons.exception.Try;
 import com.ulfric.turtle.exchange.ExchangeComponentWrapper;
 import com.ulfric.turtle.exchange.ExchangeController;
 import com.ulfric.turtle.exchange.ExchangeHandler;
+import com.ulfric.turtle.health.service.Health;
+import com.ulfric.turtle.manage.HealthStatus;
+import com.ulfric.turtle.manage.HealthStatusImpl;
+import com.ulfric.turtle.manage.ServiceDeployment;
+import com.ulfric.turtle.manage.ServiceDeploymentImpl;
 import com.ulfric.turtle.method.HttpMethod;
 import com.ulfric.turtle.registry.service.Registry;
 import com.ulfric.turtle.service.find.ServiceFinder;
@@ -26,20 +31,18 @@ import io.undertow.UndertowOptions;
 import io.undertow.server.HttpServerExchange;
 
 @Shared
-public class TurtleServer {
+public class TurtleServer extends Container {
 
 	public static void main(String[] args)
 	{
 		ObjectFactory factory = ObjectFactory.newInstance();
 		TurtleServer server = factory.requestExact(TurtleServer.class);
-		server.load();
-		server.start();
+		server.enable();
 	}
 
 	private final Map<Artifact, ServiceLoader> services = new HashMap<>();
 	private final Map<HttpMethod, Map<String, ExchangeController>> allControllers = new HashMap<>();
 	private final Undertow undertow;
-	private final Container container = new Container();
 
 	@Inject private ObjectFactory factory;
 	@Inject private ServiceFinder finder;
@@ -60,7 +63,8 @@ public class TurtleServer {
 				.build();
 	}
 
-	private void load()
+	@Override
+	public void onLoad()
 	{
 		for (HttpMethod httpMethod : HttpMethod.values())
 		{
@@ -68,10 +72,16 @@ public class TurtleServer {
 		}
 
 		Container.registerComponentWrapper(Object.class, this.factory.requestExact(ExchangeComponentWrapper.class));
-		this.container.install(Registry.class);
+
+		this.factory.bind(ServiceDeployment.class).to(ServiceDeploymentImpl.class);
+		this.factory.bind(HealthStatus.class).to(HealthStatusImpl.class);
+
+		this.install(Registry.class);
+		this.install(Health.class);
 	}
 
-	public void start()
+	@Override
+	public void onEnable()
 	{
 		this.undertow.start();
 		this.running = true;
@@ -99,8 +109,8 @@ public class TurtleServer {
 		ServiceLoader loader = this.finder.find(artifact);
 		this.services.put(artifact, loader);
 
-		loader.load();
-		loader.enable();
+		loader.loadService();
+		loader.enableService();
 	}
 
 	public void unloadService(Artifact artifact)

@@ -59,6 +59,12 @@
             <version>1.0.0</version>
             <scope>compile</scope>
         </dependency>
+        <dependency>
+            <groupId>com.ulfric</groupId>
+            <artifactId>turtle-server-health-service</artifactId>
+            <version>1.0.0</version>
+            <scope>compile</scope>
+        </dependency>
 
         <!-- Google -->
         <dependency>

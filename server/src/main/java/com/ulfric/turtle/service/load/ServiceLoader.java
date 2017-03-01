@@ -33,7 +33,7 @@ public final class ServiceLoader {
 		this.path = path;
 	}
 
-	public void load()
+	public void loadService()
 	{
 		ServiceClassLoader classLoader = new ServiceClassLoader(this);
 
@@ -47,7 +47,7 @@ public final class ServiceLoader {
 		this.readClasses(classLoader);
 	}
 
-	public void enable()
+	public void enableService()
 	{
 		this.services.forEach(Container::enable);
 	}
