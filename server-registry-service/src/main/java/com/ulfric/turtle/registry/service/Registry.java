@@ -5,7 +5,7 @@ import com.ulfric.turtle.TurtleService;
 public class Registry extends TurtleService {
 
 	@Override
-	public void onEnable()
+	public void onLoad()
 	{
 		this.install(RegistryResource.class);
 	}

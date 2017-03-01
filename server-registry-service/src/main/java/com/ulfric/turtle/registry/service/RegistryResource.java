@@ -28,9 +28,9 @@ public class RegistryResource {
 			response.setSuccessful(true);
 			return response;
 		}
-		catch (Throwable throwable)
+		catch (Exception exception)
 		{
-			throwable.printStackTrace();
+			exception.printStackTrace();
 
 			response.setSuccessful(false);
 			return response;
