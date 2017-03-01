@@ -17,6 +17,7 @@ import com.ulfric.turtle.exchange.ExchangeComponentWrapper;
 import com.ulfric.turtle.exchange.ExchangeController;
 import com.ulfric.turtle.exchange.ExchangeHandler;
 import com.ulfric.turtle.method.HttpMethod;
+import com.ulfric.turtle.registry.service.Registry;
 import com.ulfric.turtle.service.find.ServiceFinder;
 import com.ulfric.turtle.service.load.ServiceLoader;
 
@@ -38,6 +39,7 @@ public class TurtleServer {
 	private final Map<Artifact, ServiceLoader> services = new HashMap<>();
 	private final Map<HttpMethod, Map<String, ExchangeController>> allControllers = new HashMap<>();
 	private final Undertow undertow;
+	private final Container container = new Container();
 
 	@Inject private ObjectFactory factory;
 	@Inject private ServiceFinder finder;
@@ -66,6 +68,7 @@ public class TurtleServer {
 		}
 
 		Container.registerComponentWrapper(Object.class, this.factory.requestExact(ExchangeComponentWrapper.class));
+		this.container.install(Registry.class);
 	}
 
 	public void start()

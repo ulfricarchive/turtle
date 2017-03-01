@@ -22,6 +22,8 @@
         <module>client</module>
         <module>balancer</module>
         <module>parent</module>
+        <module>server-registry-model</module>
+        <module>server-registry-service</module>
     </modules>
 
 	<dependencies>
