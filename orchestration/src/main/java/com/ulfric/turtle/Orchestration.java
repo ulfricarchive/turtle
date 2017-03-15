@@ -1,8 +1,8 @@
 package com.ulfric.turtle;
 
-import com.ulfric.commons.cdi.ObjectFactory;
-import com.ulfric.commons.cdi.initialize.Initialize;
-import com.ulfric.commons.cdi.inject.Inject;
+import com.ulfric.dragoon.ObjectFactory;
+import com.ulfric.dragoon.initialize.Initialize;
+import com.ulfric.dragoon.inject.Inject;
 
 public class Orchestration {
 

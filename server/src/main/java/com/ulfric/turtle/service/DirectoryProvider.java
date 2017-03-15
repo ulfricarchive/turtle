@@ -4,7 +4,7 @@ import java.net.URL;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-import com.ulfric.commons.cdi.scope.Shared;
+import com.ulfric.dragoon.scope.Shared;
 import com.ulfric.commons.exception.Try;
 
 @Shared

@@ -13,9 +13,9 @@ import com.google.devtools.clouderrorreporting.v1beta1.ErrorContext;
 import com.google.devtools.clouderrorreporting.v1beta1.ProjectName;
 import com.google.devtools.clouderrorreporting.v1beta1.ReportedErrorEvent;
 import com.google.devtools.clouderrorreporting.v1beta1.SourceLocation;
-import com.ulfric.commons.cdi.ObjectFactory;
-import com.ulfric.commons.cdi.inject.Inject;
-import com.ulfric.commons.cdi.scope.Shared;
+import com.ulfric.dragoon.ObjectFactory;
+import com.ulfric.dragoon.inject.Inject;
+import com.ulfric.dragoon.scope.Shared;
 import com.ulfric.commons.exception.ThrowableUtils;
 
 @Shared

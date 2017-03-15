@@ -8,12 +8,12 @@ import javax.net.ssl.SSLContext;
 import org.apache.commons.collections4.map.CaseInsensitiveMap;
 
 import com.ulfric.commons.artifact.Artifact;
-import com.ulfric.commons.cdi.ObjectFactory;
-import com.ulfric.commons.cdi.container.Container;
-import com.ulfric.commons.cdi.inject.Inject;
-import com.ulfric.commons.cdi.scope.Shared;
+import com.ulfric.dragoon.ObjectFactory;
+import com.ulfric.dragoon.container.Container;
+import com.ulfric.dragoon.inject.Inject;
+import com.ulfric.dragoon.scope.Shared;
 import com.ulfric.commons.exception.Try;
-import com.ulfric.turtle.exchange.ExchangeComponentWrapper;
+import com.ulfric.turtle.exchange.ExchangeFeatureWrapper;
 import com.ulfric.turtle.exchange.ExchangeController;
 import com.ulfric.turtle.exchange.ExchangeHandler;
 import com.ulfric.turtle.health.service.Health;
@@ -71,7 +71,7 @@ public class TurtleServer extends Container {
 			this.allControllers.put(httpMethod, new CaseInsensitiveMap<>());
 		}
 
-		Container.registerComponentWrapper(Object.class, this.factory.requestExact(ExchangeComponentWrapper.class));
+		Container.registerFeatureWrapper(Object.class, this.factory.requestExact(ExchangeFeatureWrapper.class));
 
 		this.factory.bind(ServiceDeployment.class).to(ServiceDeploymentImpl.class);
 		this.factory.bind(HealthStatus.class).to(HealthStatusImpl.class);

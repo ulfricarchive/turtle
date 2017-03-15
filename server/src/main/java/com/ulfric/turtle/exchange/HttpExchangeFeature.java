@@ -3,11 +3,11 @@ package com.ulfric.turtle.exchange;
 import java.util.HashSet;
 import java.util.Set;
 
-import com.ulfric.commons.cdi.container.SkeletalComponent;
-import com.ulfric.commons.cdi.inject.Inject;
+import com.ulfric.dragoon.container.SkeletalFeature;
+import com.ulfric.dragoon.inject.Inject;
 import com.ulfric.turtle.TurtleServer;
 
-public class HttpExchangeComponent extends SkeletalComponent {
+public class HttpExchangeFeature extends SkeletalFeature {
 
 	private final Set<ExchangeController> exchangeControllers = new HashSet<>();
 

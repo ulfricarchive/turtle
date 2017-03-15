@@ -5,27 +5,27 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 import java.util.stream.Stream;
 
-import com.ulfric.commons.cdi.ObjectFactory;
-import com.ulfric.commons.cdi.container.Component;
-import com.ulfric.commons.cdi.container.ComponentWrapper;
-import com.ulfric.commons.cdi.inject.Inject;
+import com.ulfric.dragoon.ObjectFactory;
+import com.ulfric.dragoon.container.Feature;
+import com.ulfric.dragoon.container.FeatureWrapper;
+import com.ulfric.dragoon.inject.Inject;
 import com.ulfric.turtle.http.HttpPackage;
 import com.ulfric.turtle.http.HttpTarget;
 import com.ulfric.turtle.http.TurtleHttpPackage;
 import com.ulfric.turtle.http.TurtleHttpTarget;
 import com.ulfric.turtle.logging.Log;
-import com.ulfric.turtle.message.Request;
-import com.ulfric.turtle.message.Response;
+import com.ulfric.turtle.model.Request;
+import com.ulfric.turtle.model.Response;
 import com.ulfric.turtle.method.HttpMethod;
 
-public class ExchangeComponentWrapper implements ComponentWrapper<Object> {
+public class ExchangeFeatureWrapper implements FeatureWrapper<Object> {
 
 	@Inject private ObjectFactory factory;
 	@Inject private Log logger;
-	@Inject private HttpExchangeComponent component;
+	@Inject private HttpExchangeFeature feature;
 
 	@Override
-	public Component apply(Component component, Object object)
+	public Feature apply(Feature feature, Object object)
 	{
 		Stream.of(object.getClass().getDeclaredMethods())
 				.filter(this::hasHttpAnnotation)
@@ -63,10 +63,10 @@ public class ExchangeComponentWrapper implements ComponentWrapper<Object> {
 					HttpTarget target = new TurtleHttpTarget(httpMethod, HttpTarget.pathOfMethod(annotation));
 					HttpPackage httpPackage = new TurtleHttpPackage(method, requestClass, responseClass);
 
-					this.component.addExchangeController(new ExchangeController(target, httpPackage));
+					this.feature.addExchangeController(new ExchangeController(target, httpPackage));
 				});
 
-		return this.component;
+		return this.feature;
 	}
 
 	private boolean hasHttpAnnotation(Method method)

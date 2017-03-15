@@ -3,9 +3,10 @@ package com.ulfric.turtle.registry.service;
 import java.util.function.Consumer;
 
 import com.ulfric.commons.artifact.Artifact;
-import com.ulfric.commons.cdi.inject.Inject;
+import com.ulfric.dragoon.bean.Beans;
+import com.ulfric.dragoon.inject.Inject;
 import com.ulfric.turtle.manage.ServiceDeployment;
-import com.ulfric.turtle.message.Response;
+import com.ulfric.turtle.model.Response;
 import com.ulfric.turtle.method.POST;
 import com.ulfric.turtle.registry.model.RegisterRequest;
 import com.ulfric.turtle.registry.model.RegisterResponse;
@@ -28,7 +29,7 @@ public class RegistryResource {
 
 	private Response act(RegisterRequest request, Consumer<Artifact> consumer)
 	{
-		RegisterResponse response = new RegisterResponse();
+		RegisterResponse response = Beans.create(RegisterResponse.class);
 		try
 		{
 			consumer.accept(request.getArtifact());

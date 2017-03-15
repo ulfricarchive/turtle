@@ -1,7 +1,7 @@
 package com.ulfric.turtle.health.model;
 
-import com.ulfric.turtle.message.Request;
+import com.ulfric.turtle.model.Request;
 
-public class HealthCPURequest extends Request {
+public interface HealthCPURequest extends Request {
 
 }

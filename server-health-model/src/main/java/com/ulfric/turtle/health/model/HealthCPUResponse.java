@@ -1,19 +1,11 @@
 package com.ulfric.turtle.health.model;
 
-import com.ulfric.turtle.message.Response;
+import com.ulfric.turtle.model.Response;
 
-public class HealthCPUResponse extends Response {
+public interface HealthCPUResponse extends Response {
 
-	private double cpuPercent;
+	double getCpuPercent();
 
-	public double getCpuPercent()
-	{
-		return this.cpuPercent;
-	}
-
-	public void setCpuPercent(double cpuPercent)
-	{
-		this.cpuPercent = cpuPercent;
-	}
+	void setCpuPercent(double cpuPercent);
 
 }

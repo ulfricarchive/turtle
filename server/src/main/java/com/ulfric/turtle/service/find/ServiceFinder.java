@@ -10,9 +10,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 import com.ulfric.commons.artifact.Artifact;
-import com.ulfric.commons.cdi.ObjectFactory;
-import com.ulfric.commons.cdi.inject.Inject;
-import com.ulfric.commons.cdi.scope.Shared;
+import com.ulfric.dragoon.ObjectFactory;
+import com.ulfric.dragoon.inject.Inject;
+import com.ulfric.dragoon.scope.Shared;
 import com.ulfric.commons.exception.Try;
 import com.ulfric.turtle.logging.Log;
 import com.ulfric.turtle.service.DirectoryProvider;

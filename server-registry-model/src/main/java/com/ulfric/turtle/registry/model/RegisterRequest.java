@@ -1,20 +1,12 @@
 package com.ulfric.turtle.registry.model;
 
 import com.ulfric.commons.artifact.Artifact;
-import com.ulfric.turtle.message.Request;
+import com.ulfric.turtle.model.Request;
 
-public class RegisterRequest extends Request {
+public interface RegisterRequest extends Request {
 
-	private Artifact artifact;
+	Artifact getArtifact();
 
-	public Artifact getArtifact()
-	{
-		return this.artifact;
-	}
-
-	public void setArtifact(Artifact artifact)
-	{
-		this.artifact = artifact;
-	}
+	void setArtifact(Artifact artifact);
 
 }

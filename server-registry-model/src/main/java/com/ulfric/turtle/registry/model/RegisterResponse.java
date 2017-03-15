@@ -1,19 +1,11 @@
 package com.ulfric.turtle.registry.model;
 
-import com.ulfric.turtle.message.Response;
+import com.ulfric.turtle.model.Response;
 
-public class RegisterResponse extends Response {
+public interface RegisterResponse extends Response {
 
-	private boolean successful;
+	boolean isSuccessful();
 
-	public boolean isSuccessful()
-	{
-		return this.successful;
-	}
-
-	public void setSuccessful(boolean successful)
-	{
-		this.successful = successful;
-	}
+	void setSuccessful(boolean successful);
 
 }

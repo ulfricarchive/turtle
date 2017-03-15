@@ -7,9 +7,9 @@ import java.nio.file.Path;
 import java.util.HashSet;
 import java.util.Set;
 
-import com.ulfric.commons.cdi.ObjectFactory;
-import com.ulfric.commons.cdi.container.Container;
-import com.ulfric.commons.cdi.inject.Inject;
+import com.ulfric.dragoon.ObjectFactory;
+import com.ulfric.dragoon.container.Container;
+import com.ulfric.dragoon.inject.Inject;
 import com.ulfric.turtle.TurtleServer;
 import com.ulfric.turtle.TurtleService;
 import com.ulfric.turtle.logging.Log;

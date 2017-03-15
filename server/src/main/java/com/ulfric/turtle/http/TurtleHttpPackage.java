@@ -4,8 +4,8 @@ import java.lang.invoke.MethodHandle;
 import java.lang.reflect.Method;
 
 import com.ulfric.commons.reflect.HandleUtils;
-import com.ulfric.turtle.message.Request;
-import com.ulfric.turtle.message.Response;
+import com.ulfric.turtle.model.Request;
+import com.ulfric.turtle.model.Response;
 
 public class TurtleHttpPackage implements HttpPackage {
 

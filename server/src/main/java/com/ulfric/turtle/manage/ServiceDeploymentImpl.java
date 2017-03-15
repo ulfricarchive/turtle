@@ -1,7 +1,7 @@
 package com.ulfric.turtle.manage;
 
 import com.ulfric.commons.artifact.Artifact;
-import com.ulfric.commons.cdi.inject.Inject;
+import com.ulfric.dragoon.inject.Inject;
 import com.ulfric.turtle.TurtleServer;
 
 public class ServiceDeploymentImpl implements ServiceDeployment {

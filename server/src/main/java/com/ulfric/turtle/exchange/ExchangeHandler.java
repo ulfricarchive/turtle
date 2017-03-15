@@ -4,14 +4,15 @@ import java.lang.invoke.MethodHandle;
 import java.lang.reflect.Method;
 import java.util.Deque;
 
-import com.ulfric.commons.cdi.ObjectFactory;
-import com.ulfric.commons.cdi.inject.Inject;
-import com.ulfric.commons.cdi.scope.Shared;
+import com.ulfric.dragoon.ObjectFactory;
+import com.ulfric.dragoon.bean.Beans;
+import com.ulfric.dragoon.inject.Inject;
+import com.ulfric.dragoon.scope.Shared;
 import com.ulfric.commons.exception.Try;
 import com.ulfric.turtle.TurtleServer;
 import com.ulfric.turtle.json.GsonProvider;
-import com.ulfric.turtle.message.Request;
-import com.ulfric.turtle.message.Response;
+import com.ulfric.turtle.model.Request;
+import com.ulfric.turtle.model.Response;
 
 import io.undertow.server.HttpHandler;
 import io.undertow.server.HttpServerExchange;
@@ -47,16 +48,12 @@ public class ExchangeHandler implements HttpHandler {
 
 			Object instance = this.factory.request(method.getDeclaringClass());
 
-			Object responseObject = Try.to(() ->
-					method.getParameterCount() == 1 ?
-							handle.invokeExact(instance, request) :
-							handle.invokeExact(instance)
-			);
+			Object responseObject = Try.to(() -> handle.invokeExact(instance, request));
 
 			Response response =
 					responseObject instanceof Response ?
 							(Response) responseObject :
-							new Response();
+							Beans.create(Response.class);
 
 			exchange.getResponseSender().send(this.gsonProvider.getGson().toJson(response));
 		}

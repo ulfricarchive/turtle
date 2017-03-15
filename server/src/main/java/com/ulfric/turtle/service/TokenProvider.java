@@ -3,9 +3,9 @@ package com.ulfric.turtle.service;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-import com.ulfric.commons.cdi.initialize.Initialize;
-import com.ulfric.commons.cdi.inject.Inject;
-import com.ulfric.commons.cdi.scope.Shared;
+import com.ulfric.dragoon.initialize.Initialize;
+import com.ulfric.dragoon.inject.Inject;
+import com.ulfric.dragoon.scope.Shared;
 import com.ulfric.commons.exception.Try;
 
 @Shared

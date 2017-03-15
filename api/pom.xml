@@ -16,6 +16,12 @@
     <dependencies>
         <dependency>
             <groupId>com.ulfric</groupId>
+            <artifactId>dragoon</artifactId>
+            <version>1.0.0</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.ulfric</groupId>
             <artifactId>turtle-client</artifactId>
             <version>1.0.0</version>
             <scope>provided</scope>

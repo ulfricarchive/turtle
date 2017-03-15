@@ -1,7 +1,7 @@
 package com.ulfric.turtle.json;
 
 import com.google.gson.Gson;
-import com.ulfric.commons.cdi.scope.Shared;
+import com.ulfric.dragoon.scope.Shared;
 
 @Shared
 public class GsonProvider {
